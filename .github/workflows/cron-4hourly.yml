@@ -1,0 +1,16 @@
+name: 4-Hourly CRON
+on:
+  schedule:
+    - cron: '0 */4 * * *'
+  workflow_dispatch:
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger thread aggregator
+        run: |
+          curl -s -X POST ${{ secrets.BACKEND_URL }}/api/jobs/run \
+            -H "Content-Type: application/json" \
+            -H "x-cron-secret: ${{ secrets.CRON_SECRET }}" \
+            -d '{"job":"thread-aggregator"}'
